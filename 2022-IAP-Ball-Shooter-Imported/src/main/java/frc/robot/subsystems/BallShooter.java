@@ -24,60 +24,66 @@ import frc.robot.RobotContainer;
 public class BallShooter extends SubsystemBase {
   /** Creates a new BallShooter. */
 
-  private static double kp = 0.01;
+  private static double kp = 0.0001;
   private static double kd = 0.0;
   private static double ki = 0.0;
   private static double period = 0.1;
+  private static double wheelCircumference = 0.1; //in meters
 
   private WPI_TalonSRX flyWheel = new WPI_TalonSRX(Constants.flyWheelID);
-  private WPI_TalonSRX rightFlyWheel = new WPI_TalonSRX(Constants.rightFlyWheelID);
+  //private WPI_TalonSRX rightFlyWheel = new WPI_TalonSRX(Constants.rightFlyWheelID);
   private WPI_TalonSRX feedWheel = new WPI_TalonSRX(Constants.feedWheelID);
   private Trigger breakBeam = new Trigger();
   private PIDController pid = new PIDController(kp, ki, kd);
-  private double ticksToRPM = (Constants.encoderTicks)/1000;
-  private double speed = Constants.midSpeed;
+  private double speed;
   private SimpleMotorFeedforward leftFlywheelFF = new SimpleMotorFeedforward(Constants.kS, Constants.kV, Constants.kA);
+  //private SimpleMotorFeedforward rightFlywheelFF = new SimpleMotorFeedforward(Constants.kS, Constants.kV, Constants.kA);
   public BallShooter() {
     flyWheel.configFactoryDefault();
-    rightFlyWheel.configFactoryDefault();
+    //rightFlyWheel.configFactoryDefault();
     feedWheel.configFactoryDefault();
 
     flyWheel.setInverted(false);
-    rightFlyWheel.configFactoryDefault();
+    //rightFlyWheel.configFactoryDefault();
     feedWheel.setInverted(false);
 
-    flyWheel.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative);
-    rightFlyWheel.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative);
+    flyWheel.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute);
+    //rightFlyWheel.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute);
 
     pid.setSetpoint(0.0);
+
+    pid.setTolerance(0.05);
   }
 
-  public double getRPM(){
-    return(flyWheel.getSelectedSensorVelocity());
+  public double getRPM(){ 
+    return ((flyWheel.getSelectedSensorVelocity() * 10)/4096.0)*60;
   }
-
+  /*public double getRightRPM(){ //Among Us In Real Life!
+    return ((rightFlyWheel.getSelectedSensorVelocity() * 10)/4096.0)*wheelCircumference;
+  }*/
+  
   public void setFlySpeed(double targetSpeed){
     //pid.setSetpoint(targetSpeed);
-    flyWheel.set((leftFlywheelFF.calculate(targetSpeed))/12.0 + pid.calculate(getRPM(), targetSpeed));
+    flyWheel.setVoltage((leftFlywheelFF.calculate(targetSpeed))/12.0 + pid.calculate(getRPM(), targetSpeed));
   //flyWheel.set(ControlMode.PercentOutput, pid.calculate(getRPM(), targetSpeed));
-  rightFlyWheel.set((leftFlywheelFF.calculate(targetSpeed))/12.0 + pid.calculate(getRPM(), targetSpeed));
-  }
+  //rightFlyWheel.setVoltage((rightFlywheelFF.calculate(targetSpeed))/12.0 + pid.calculate(getRightRPM(), targetSpeed));
+}
   public void stopFlywheel(){
     flyWheel.set(ControlMode.PercentOutput, 0);
-    rightFlyWheel.set(ControlMode.PercentOutput, 0);
+    //rightFlyWheel.set(ControlMode.PercentOutput, 0);
   }
   public void setFeedOnOff(boolean onOrOff){
     if (onOrOff) {
-      feedWheel.set(ControlMode.PercentOutput, 0.0);
+      feedWheel.set(ControlMode.PercentOutput, 0.5);
     }
     else {
-      feedWheel.set(ControlMode.PercentOutput, 0.5);
+      feedWheel.set(ControlMode.PercentOutput, 0.0);
     }
   }
 
   public void resetEncoder(){
     flyWheel.setSelectedSensorPosition(0);
-    rightFlyWheel.setSelectedSensorPosition(0);
+    //rightFlyWheel.setSelectedSensorPosition(0);
   }
 
   public void setMode(double newSpeed){
@@ -89,6 +95,7 @@ public class BallShooter extends SubsystemBase {
     // Take care of Fly Wheel first
     //breakBeam.whenActive(timer.start());
     SmartDashboard.putNumber("rpm", getRPM());
+    SmartDashboard.putNumber("Voltage set", leftFlywheelFF.calculate(Constants.midSpeed)/12.0 + pid.calculate(getRPM(), Constants.midSpeed));
     //double drivePowerLevel = pid.calculate(getRPM());
     //flyWheel.set(ControlMode.PercentOutput, drivePowerLevel);
 

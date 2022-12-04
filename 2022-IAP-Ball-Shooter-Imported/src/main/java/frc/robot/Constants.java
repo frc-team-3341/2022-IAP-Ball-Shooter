@@ -16,8 +16,9 @@ package frc.robot;
 public final class Constants {
     public static final int flyWheelID = 16;
     public static final int rightFlyWheelID = 17;
+    //right flywheel only needed depending on if it will be on the final shooter
 
-    public static final int feedWheelID = 15;
+    public static final int feedWheelID = 0;
 
     public static final int joystick = 0;
 
@@ -28,11 +29,12 @@ public final class Constants {
     public final static int midSpeedButton = 10;
     public final static int highSpeedButton = 12;
 
-    public static final int encoderTicks = 4;
+    public static final int encoderTicks = 4096;
 
-    public static final double lowSpeed = 1;
-    public static final double midSpeed = 3;
-    public static final double highSpeed = 10;
+    public static final double lowSpeed = 400;
+    public static final double midSpeed = 1000;
+    public static final double highSpeed = 2000;
+    //placeholder numbers
     public static final double fullSpeedInRpm = 2400;
 
     public static final double kS = 0.41733;

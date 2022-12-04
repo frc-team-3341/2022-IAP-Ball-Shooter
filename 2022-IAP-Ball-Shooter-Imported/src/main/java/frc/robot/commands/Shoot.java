@@ -20,6 +20,9 @@ public class Shoot extends CommandBase {
   }
 
   // Called when the command is initially scheduled.
+  public double getSpeed(){
+    return speed;
+  }
   @Override
   public void initialize() {
     shooter.resetEncoder();
