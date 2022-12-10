@@ -24,9 +24,7 @@ import frc.robot.RobotContainer;
 public class BallShooter extends SubsystemBase {
   /** Creates a new BallShooter. */
 
-  private static double kp = 0.0001;
-  private static double kd = 0.0;
-  private static double ki = 0.0;
+  
   private static double period = 0.1;
   private static double wheelCircumference = 0.1; //in meters
 
@@ -34,9 +32,9 @@ public class BallShooter extends SubsystemBase {
   //private WPI_TalonSRX rightFlyWheel = new WPI_TalonSRX(Constants.rightFlyWheelID);
   private WPI_TalonSRX feedWheel = new WPI_TalonSRX(Constants.feedWheelID);
   private Trigger breakBeam = new Trigger();
-  private PIDController pid = new PIDController(kp, ki, kd);
-  private double speed;
-  private SimpleMotorFeedforward leftFlywheelFF = new SimpleMotorFeedforward(Constants.kS, Constants.kV, Constants.kA);
+  private PIDController pid = new PIDController(Constants.PIDConstants.kP, Constants.PIDConstants.kI, Constants.PIDConstants.kD);
+  private double speed; 
+  private SimpleMotorFeedforward leftFlywheelFF = new SimpleMotorFeedforward(Constants.leftFlywheelFF.kS, Constants.leftFlywheelFF.kV, Constants.leftFlywheelFF.kA);
   //private SimpleMotorFeedforward rightFlywheelFF = new SimpleMotorFeedforward(Constants.kS, Constants.kV, Constants.kA);
   public BallShooter() {
     flyWheel.configFactoryDefault();
@@ -57,24 +55,28 @@ public class BallShooter extends SubsystemBase {
 
   public double getRPM(){ 
     return ((flyWheel.getSelectedSensorVelocity() * 10)/4096.0)*60;
+    //Converts ticks per 0.1 seconds to RPM
   }
   /*public double getRightRPM(){ //Among Us In Real Life!
     return ((rightFlyWheel.getSelectedSensorVelocity() * 10)/4096.0)*wheelCircumference;
   }*/
   
-  public void setFlySpeed(double targetSpeed){
+ /* public void setFlySpeed(double targetSpeed){
     //pid.setSetpoint(targetSpeed);
     flyWheel.setVoltage((leftFlywheelFF.calculate(targetSpeed))/12.0 + pid.calculate(getRPM(), targetSpeed));
   //flyWheel.set(ControlMode.PercentOutput, pid.calculate(getRPM(), targetSpeed));
   //rightFlyWheel.setVoltage((rightFlywheelFF.calculate(targetSpeed))/12.0 + pid.calculate(getRightRPM(), targetSpeed));
-}
+}*/
+  public void spin(double speed){
+    flyWheel.set(ControlMode.PercentOutput, speed);
+  }
   public void stopFlywheel(){
     flyWheel.set(ControlMode.PercentOutput, 0);
     //rightFlyWheel.set(ControlMode.PercentOutput, 0);
   }
   public void setFeedOnOff(boolean onOrOff){
     if (onOrOff) {
-      feedWheel.set(ControlMode.PercentOutput, 0.5);
+      feedWheel.set(ControlMode.PercentOutput, Constants.feedSpeed);
     }
     else {
       feedWheel.set(ControlMode.PercentOutput, 0.0);
@@ -100,12 +102,6 @@ public class BallShooter extends SubsystemBase {
     //flyWheel.set(ControlMode.PercentOutput, drivePowerLevel);
 
     // Take care of Feed Wheel second
-    if(RobotContainer.getJoystick().getTriggerPressed()){
-      setFeedOnOff(false);
-    }
-    else{
-      setFeedOnOff(true);
-    }
     
   }
 }

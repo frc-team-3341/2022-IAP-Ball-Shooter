@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.Feeder;
 import frc.robot.commands.Shoot;
 import frc.robot.subsystems.BallShooter;
 import frc.robot.subsystems.ExampleSubsystem;
@@ -28,10 +29,12 @@ public class RobotContainer {
   private final Shoot lowShoot = new Shoot(Constants.lowSpeed);
   private final Shoot midShoot = new Shoot(Constants.midSpeed);
   private final Shoot highShoot = new Shoot(Constants.highSpeed);
+  private final Feeder feedWheel = new Feeder();
   private static Joystick joystick;
   private static JoystickButton lowSpeedButton;
   private static JoystickButton midSpeedButton;
   private static JoystickButton highSpeedButton;
+  private static JoystickButton feedButton;
   private final static BallShooter ballShooter = new BallShooter();
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -40,6 +43,7 @@ public class RobotContainer {
     lowSpeedButton = new JoystickButton(joystick, Constants.lowSpeedButton);
     midSpeedButton = new JoystickButton(joystick, Constants.midSpeedButton);
     highSpeedButton = new JoystickButton(joystick, Constants.highSpeedButton);
+    feedButton = new JoystickButton(joystick, Constants.feedButton);
     configureButtonBindings();
   }
 
@@ -53,6 +57,7 @@ public class RobotContainer {
     lowSpeedButton.whenPressed(lowShoot);
     midSpeedButton.whenPressed(midShoot);
     highSpeedButton.whenPressed(highShoot);
+    feedButton.whenPressed(feedWheel);
   }
   
   /**
