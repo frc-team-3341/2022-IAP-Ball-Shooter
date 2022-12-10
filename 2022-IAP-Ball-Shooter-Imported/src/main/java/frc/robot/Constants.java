@@ -30,14 +30,30 @@ public final class Constants {
     public final static int highSpeedButton = 12;
 
     public static final int encoderTicks = 4096;
-
+    //Placeholder speeds. each is meant to be in RPM
     public static final double lowSpeed = 400;
     public static final double midSpeed = 1000;
     public static final double highSpeed = 2000;
-    //placeholder numbers
     public static final double fullSpeedInRpm = 2400;
 
-    public static final double kS = 0.41733;
-    public static final double kV = 0.4025;
-    public static final double kA = 0.046839;
+    //Placeholder speed. Speed is in the range of [-1,1]
+    public static final double feedSpeed = 0.5;
+    
+    //Placeholder numbers. We will probably have 1 flywheel on the final product.
+    public static final class rightFlywheelFF {
+        public static final double kS = 0.53709;
+        public static final double kV = 0.28844;
+        public static final double kA = 0.015011;
+    }
+        
+    public static final class leftFlywheelFF {
+        public static final double kS = 0.58862;
+        public static final double kV = 0.29497;
+        public static final double kA = 0.011029;
+    }        
+    public static final class PIDConstants {
+        public static final double kP = 0.0001;
+        public static final double kI = 0.0;
+        public static final double kD = 0.0;
+      }
 }
