@@ -50,7 +50,7 @@ public class BallShooter extends SubsystemBase {
 
     pid.setSetpoint(0.0);
 
-    pid.setTolerance(0.05);
+    pid.setTolerance(0.01);
   }
 
   public double getRPM(){ 
@@ -61,14 +61,14 @@ public class BallShooter extends SubsystemBase {
     return ((rightFlyWheel.getSelectedSensorVelocity() * 10)/4096.0)*wheelCircumference;
   }*/
   
- /* public void setFlySpeed(double targetSpeed){
+  public void setFlySpeed(double targetSpeed){
     //pid.setSetpoint(targetSpeed);
-    flyWheel.setVoltage((leftFlywheelFF.calculate(targetSpeed))/12.0 + pid.calculate(getRPM(), targetSpeed));
+    flyWheel.setVoltage(targetSpeed);
   //flyWheel.set(ControlMode.PercentOutput, pid.calculate(getRPM(), targetSpeed));
   //rightFlyWheel.setVoltage((rightFlywheelFF.calculate(targetSpeed))/12.0 + pid.calculate(getRightRPM(), targetSpeed));
-}*/
-  public void spin(double speed){
-    flyWheel.set(ControlMode.PercentOutput, speed);
+}
+  public void spin(double voltage){
+    flyWheel.set(ControlMode.PercentOutput, voltage);
   }
   public void stopFlywheel(){
     flyWheel.set(ControlMode.PercentOutput, 0);

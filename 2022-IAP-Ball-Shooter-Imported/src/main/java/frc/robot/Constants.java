@@ -14,15 +14,15 @@ package frc.robot;
  */
 
 public final class Constants {
-    public static final int flyWheelID = 16;
+    public static final int flyWheelID = 2;
     public static final int rightFlyWheelID = 17;
     //right flywheel only needed depending on if it will be on the final shooter
 
-    public static final int feedWheelID = 0;
+    public static final int feedWheelID = 3;
 
     public static final int joystick = 0;
 
-    public final static int feedButton = 0;
+    public final static int feedButton = 1;
     public final static int speedUpButton = 3;
     public final static int stopButton = 4;
     public final static int lowSpeedButton = 8;
@@ -47,12 +47,12 @@ public final class Constants {
     }
         
     public static final class leftFlywheelFF {
-        public static final double kS = 0.58862;
-        public static final double kV = 0.29497;
-        public static final double kA = 0.011029;
+        public static final double kS = 0.57443;
+        public static final double kV = 0.29162;
+        public static final double kA = 0.011557;
     }        
     public static final class PIDConstants {
-        public static final double kP = 0.0001;
+        public static final double kP = 0.0006;
         public static final double kI = 0.0;
         public static final double kD = 0.0;
       }

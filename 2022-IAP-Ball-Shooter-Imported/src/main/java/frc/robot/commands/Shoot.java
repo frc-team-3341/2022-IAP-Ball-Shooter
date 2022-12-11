@@ -6,6 +6,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
@@ -33,14 +34,15 @@ public class Shoot extends CommandBase {
   @Override
   public void initialize() {
     shooter.resetEncoder();
-    pid.setSetpoint(speed);
+    pid.setSetpoint(speed*2);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    
-      shooter.spin(pid.calculate(speed)+leftFlywheelFF.calculate(speed)/12.0);
+      //shooter.setFlySpeed((leftFlywheelFF.calculate(speed))/12.0 + pid.calculate(shooter.getRPM(), speed));
+      shooter.spin(pid.calculate(shooter.getRPM()));
+      SmartDashboard.putNumber("Speed Diff", pid.calculate(shooter.getRPM()));
       //feedForward divided by 12 due to 12 volt battery
   }
 
@@ -53,9 +55,6 @@ public class Shoot extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if(RobotContainer.getJoystick().getRawButtonPressed(Constants.stopButton)){
-      return true;
-    }
-    return false;
+    return RobotContainer.getJoystick().getRawButtonPressed(Constants.stopButton);
   }
 }
